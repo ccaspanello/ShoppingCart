@@ -1,0 +1,35 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+# Variable Group From Pipline -> Library
+variables:
+  - group: overops-config
+
+# Build Paramters from User Interface
+parameters:
+  - name: markUnstable
+    displayName: Mark Unstable?
+    type: boolean
+    default: true
+
+steps:
+# - task: Bash@3
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#       # Write your commands here
+#       ls -lah /home/vsts/work/_tasks/OverOpsQualityReport_ef7c8a5d-bf75-467a-b036-c2eb1fd9c332/0.0.1/
+- task: OverOpsQualityReport@1
+  inputs:
+    overOpsAppURL: '$(overopsAppURL)'
+    overOpsURL: '$(overOpsURL)'
+    overOpsSID: '$(overOpsSID)'
+    overOpsAPIKey: '$(overOpsAPIKey)'
+    applicationName: 'overops-event-generator-2.2.0.jar'
+    deploymentName: '2.2.0'
+    newEvents: true
+    markUnstable: ${{parameters.markUnstable}}
+    debug: true
